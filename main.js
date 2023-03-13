@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import * as THREE from 'https://cdn.skypack.dev/three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 // target the HTML embed 
@@ -41,7 +41,7 @@ function animate() {
   // rotate the model
   scene.traverse((object) => {
     if (object.isMesh) {
-      object.rotation.y += 0.001;
+      object.rotation.y += 0.01;
     }
   });
 
