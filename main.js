@@ -1,48 +1,52 @@
-import * as THREE from 'three'
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
-const loader = new GLTFLoader()
-
-
-// load resource
-loader.load ( 'https://www.vectary.com/p/1wVE8q2T8634WlZZImboPH', function ( gltf )
-{
- // [...]
-});
-
-
-// Canvas
+// target the HTML embed 
 const canvas = document.querySelector('canvas.webgl')
 
-// Scene
-const scene = new THREE.Scene()
+// create a scene
+const scene = new THREE.Scene();
 
-// Camera
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
-camera.position.z = 5
+// create a camera
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+camera.position.set(0, 0, 5);
 scene.add(camera)
 
-// Geometry
-const geometry = new THREE.BoxGeometry(1, 1, 1)
-const material = new THREE.MeshNormalMaterial()
-const mesh = new THREE.Mesh(geometry, material)
-scene.add(mesh)
 
-// Renderer
-const renderer = new THREE.WebGL1Renderer({
+// lighting
+const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+directionalLight.position.set(1, 1, );
+scene.add(directionalLight);
+
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+scene.add(ambientLight);
+
+// create a renderer
+const renderer = new THREE.WebGLRenderer({
   canvas: canvas
-})
-renderer.setSize(window.innerWidth, window.innerHeight)
+});
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.render(scene, camera)
 
-
-
-// Function
+// load the model using GLTFLoader
+const gltfLoader = new GLTFLoader();
+gltfLoader.load('dist/assets/models/melodydefenestratorwhite.glb', function (gltf) {
+  // add the model to the scene
+  scene.add(gltf.scene);
+});
 
 function animate() {
-  requestAnimationFrame ( animate )
-  mesh.rotation.x += 0.01
-  mesh.rotation.y += 0.01
+  requestAnimationFrame(animate);
 
-  renderer.render(scene, camera)
+  // rotate the model
+  scene.traverse((object) => {
+    if (object.isMesh) {
+      object.rotation.y += 0.001;
+    }
+  });
+
+  // render the scene
+  renderer.render(scene, camera);
 }
-animate()
+
+animate();
